@@ -1,13 +1,21 @@
-from django.core.management.base import BaseCommand
-from faker import Faker
-from addresses.models import Address
-from drivers.models import Driver
+"""This module contains a Django management command to populate the database with fake data for addrs and drivers."""
+
 import random
 
+from django.core.management.base import BaseCommand
+from faker import Faker
+
+from addresses.models import Address
+from drivers.models import Driver
+
+
 class Command(BaseCommand):
-    help = 'Populate the database with fake addresses and drivers'
+    """Command to populate the database with fake addresses and drivers."""
+
+    help = "Populate the database with fake addresses and drivers"
 
     def handle(self, *args, **kwargs):
+        """Handle the command to populate fake data."""
         fake = Faker()
 
         # Clear previous fake data (optional)
@@ -24,7 +32,7 @@ class Command(BaseCommand):
             )
             addresses.append(address)
         Address.objects.bulk_create(addresses)
-        self.stdout.write(self.style.SUCCESS(f'Created {len(addresses)} addresses.'))
+        self.stdout.write(self.style.SUCCESS(f"Created {len(addresses)} addresses."))
 
         drivers = []
         for _ in range(25):
@@ -36,6 +44,6 @@ class Command(BaseCommand):
             )
             drivers.append(driver)
         Driver.objects.bulk_create(drivers)
-        self.stdout.write(self.style.SUCCESS(f'Created {len(drivers)} drivers.'))
+        self.stdout.write(self.style.SUCCESS(f"Created {len(drivers)} drivers."))
 
-        self.stdout.write(self.style.SUCCESS('Fake data populated successfully!'))
+        self.stdout.write(self.style.SUCCESS("Fake data populated successfully!"))

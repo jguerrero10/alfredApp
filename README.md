@@ -136,6 +136,139 @@ Se generarán automáticamente 20 direcciones y 20 conductores.
 
 ---
 
+## Flujo completo de prueba de la API
+
+1. Authenticarse y obtener token.
+
+Request:
+```http request
+POST /api/token/
+Content-Type: application/json
+```
+
+Body JSON:
+
+```json
+{
+  "username": "usuario",
+  "password": "contraseña"
+}
+```
+Respuesta exitosa:
+
+```json
+{
+  "access": "access_token_aqui",
+  "refresh": "refresh_token_aqui"
+}
+```
+> Notas: Usa el access token para autenticar las siguientes peticiones.
+> En cada request protegido, añade un header:
+> Authorization: Bearer <access_token>
+
+2. Listar Direcciones disponibles
+
+Request:
+```http request
+GET /api/addresses/
+Authorization: Bearer <access_token>
+```
+Respuesta exitosa:
+
+```json
+[
+  {
+    "id": 1,
+    "street": "6671 Page Mountain Apt. 946",
+    "city": "Port Stephanie",
+    "latitude": -73.35,
+    "longitude": -70.40
+  },
+  ...
+]
+```
+> Elige una dirección (client_address_id) para solicitar un servicio.
+
+3. Solicitar un Servicio
+
+Request:
+```http request
+POST /api/services/request-service/
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
+Body JSON:
+
+```json
+{
+  "client_address_id": 1
+}
+```
+Respuesta exitosa:
+
+```json
+{
+  "id": 1,
+  "client_address": 1,
+  "driver": 5,
+  "status": "pending",
+  "estimated_time_minutes": 8,
+  "created_at": "2025-04-27T02:00:00Z"
+}
+```
+
+> El sistema asignará automáticamente el conductor disponible más cercano.
+
+4. Consultar Servicios
+
+Request:
+```http request
+GET /api/services/
+Authorization: Bearer <access_token>
+```
+
+Respuesta exitosa:
+
+```json
+[
+  {
+    "id": 1,
+    "client_address": 1,
+    "driver": 5,
+    "status": "pending",
+    "estimated_time_minutes": 8,
+    "created_at": "2025-04-27T02:00:00Z"
+  }
+]
+```
+5. Marcar un Servicio como Completado
+
+Cuando el servicio haya sido realizado, el conductor puede marcarlo como completed.
+
+Request:
+```http request
+POST /api/services/1/complete/
+Authorization: Bearer <access_token>
+```
+
+Respuesta exitosa:
+
+```json
+{
+  "message": "Service marked as completed."
+}
+```
+> El servicio pasa a estado completed y el conductor vuelve a estar disponible para nuevas asignaciones.
+
+### Observaciones:
+Los conductores son asignados de acuerdo a la distancia mínima al cliente (simple distancia Euclidiana).
+
+Si no hay conductores disponibles, la API retorna un error manejado.
+
+Cada servicio está protegido por autenticación JWT.
+
+---
+
 ## Tests
 
 Para correr los tests:
