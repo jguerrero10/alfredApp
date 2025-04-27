@@ -5,7 +5,7 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # Copiar dependencias
-COPY pyproject.toml poetry.lock README.md ./
+COPY pyproject.toml poetry.lock README.md .coveragerc ./
 
 # Instalar Poetry
 RUN pip install poetry

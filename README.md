@@ -274,11 +274,32 @@ Cada servicio está protegido por autenticación JWT.
 Para correr los tests:
 
 ```bash
-docker-compose exec web python manage.py test
+docker-compose exec web coverage run --rcfile=.coveragerc manage.py test
 ```
 
 (Tests básicos cubren creación de servicios, asignación de conductores y flujo de finalización.)
 
+Para ver el reporte de cobertura:
+
+```bash
+docker-compose exec web coverage report
+```
+```text
+Name                       Stmts   Miss  Cover
+----------------------------------------------
+addresses/models.py            6      0   100%
+addresses/serializers.py       6      0   100%
+addresses/views.py             8      0   100%
+drivers/models.py              6      0   100%
+drivers/serializers.py         6      0   100%
+drivers/views.py               8      0   100%
+services/models.py            10      0   100%
+services/serializers.py        7      0   100%
+services/views.py             50      6    88%
+----------------------------------------------
+TOTAL                        107      6    94%
+
+```
 ---
 
 ## Despliegue en Cloud (AWS / GCP)
