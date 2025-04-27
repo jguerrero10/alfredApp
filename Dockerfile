@@ -12,7 +12,7 @@ RUN pip install poetry
 
 # Instalar dependencias
 RUN poetry config virtualenvs.create false \
-    && poetry install --only main --no-interaction --no-ansi
+    && poetry install --no-interaction --no-ansi
 
 # Copiar el resto del código
 COPY . .

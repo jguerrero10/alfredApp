@@ -4,15 +4,56 @@ repos:
     hooks:
       - id: black
         language_version: python3
+        exclude: |
+          (^|/)migrations/|
+          (^|/)env/|
+          (^|/)venv/|
+          (^|/)\.venv/|
+          (^|/)build/|
+          (^|/)dist/|
+          (^|/)htmlcov/|
+          (^|/)__pycache__/|
+          (^|/)tests/|
+          (^|/)test_.*\.py$|
+          Dockerfile|
+          docker-compose.yml
 
   - repo: https://github.com/pycqa/isort
     rev: 6.0.1
     hooks:
       - id: isort
         language_version: python3
+        exclude: |
+          (^|/)migrations/|
+          (^|/)env/|
+          (^|/)venv/|
+          (^|/)\.venv/|
+          (^|/)build/|
+          (^|/)dist/|
+          (^|/)htmlcov/|
+          (^|/)__pycache__/|
+          (^|/)tests/|
+          (^|/)test_.*\.py$|
+          Dockerfile|
+          docker-compose.yml
 
   - repo: https://github.com/pycqa/flake8
     rev: 7.2.0
     hooks:
       - id: flake8
-        additional_dependencies: ["flake8-docstrings"]
+        additional_dependencies:
+          - flake8-docstrings
+        exclude: |
+          (^|/)env/|
+          (^|/)venv/|
+          (^|/)\.venv/|
+          (^|/)build/|
+          (^|/)dist/|
+          (^|/)htmlcov/|
+          (^|/)__pycache__/|
+          (^|/)tests/|
+          (^|/)test_.*\.py$|
+          Dockerfile|
+          docker-compose.yml
+        args:
+          - --per-file-ignores=*/migrations/*.py:D100,D101,D102,D103,D104,D105,D106,D107
