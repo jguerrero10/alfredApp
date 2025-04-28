@@ -61,6 +61,32 @@ http://localhost:8000/api/
 ```
 
 ---
+## Creación de superusuario (admin)
+
+Para gestionar los modelos a través del panel de administración de Django (`/admin/`), es necesario crear un superusuario.
+
+Puedes hacerlo ejecutando:
+
+```bash
+docker-compose exec web python manage.py createsuperuser
+```
+
+---
+##  Documentación de la API
+
+La API cuenta con documentación automática generada con `drf-spectacular`.
+
+### Endpoints de documentación disponibles:
+
+| URL | Descripción |
+|:----|:------------|
+| `/api/docs/` | Documentación interactiva Swagger UI |
+| `/api/redoc/` | Documentación en formato Redoc |
+| `/api/schema/` | Esquema OpenAPI 3 en formato JSON |
+ 
+Desde `/api/docs/` se pueden ejecutar y probar directamente los endpoints protegidos con JWT.
+
+La documentación se genera automáticamente a partir de los serializers, views y rutas registradas en el proyecto.
 
 ## Uso de la API
 
