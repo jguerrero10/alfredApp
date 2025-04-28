@@ -314,6 +314,49 @@ TOTAL                        107      6    94%
   - Comunicación HTTPS obligatoria.
   - IAM roles específicos para cada servicio.
 
+Parte 1: Script básico para desplegar en Google Cloud Run
+
+```bash
+#!/bin/bash
+
+# Variables
+PROJECT_ID="tu-id-proyecto-gcp"
+SERVICE_NAME="alfred-backend"
+REGION="us-central1"
+
+# Build imagen de Docker
+gcloud builds submit --tag gcr.io/$PROJECT_ID/$SERVICE_NAME
+
+# Desplegar en Cloud Run
+gcloud run deploy $SERVICE_NAME \
+    --image gcr.io/$PROJECT_ID/$SERVICE_NAME \
+    --platform managed \
+    --region $REGION \
+    --allow-unauthenticated \
+    --set-env-vars DJANGO_SETTINGS_MODULE=alfred.settings \
+    --port 8000
+```
+
+Este script hace lo siguiente:
+
+1. Hace `docker build` usando Cloud Build.
+2. Sube la imagen a Google Container Registry.
+3. Despliega en Cloud Run.
+4. Expone el servicio en puerto 8000.
+5. Permite tráfico público (--allow-unauthenticated).
+
+### ¿Por qué elegí Google Cloud Run en vez de AWS?
+
+| Criterio | Google Cloud Run | AWS (Fargate / Elastic Beanstalk) |
+|:---------|:-----------------|:---------------------------------|
+| **Simplicidad de despliegue** | Muy sencillo: `gcloud run deploy` con configuración mínima. | Más pasos: definición de servicios ECS, creación de clusters, task definitions. |
+| **Autoescalado a cero** | Nativo: escala de 0 a N instancias automáticamente. | En ECS o Fargate escalar a cero no es automático; requiere configuraciones especiales. |
+| **Costo** | Pago exacto por invocación y tiempo de ejecución. Muy barato para proyectos que no tienen tráfico constante. | Fargate cobra por recursos reservados incluso si no hay tráfico. Elastic Beanstalk requiere instancias EC2 mínimas. |
+| **HTTPS automático** | Gratis y habilitado por defecto en Cloud Run. | En AWS debes configurar un Load Balancer + ACM + Route53 para HTTPS. |
+| **Configuración inicial** | Muy rápida: despliegue directo de imagen Docker. | AWS requiere configurar VPCs, subnets, security groups (más complejo). |
+| **Ideal para pruebas técnicas y MVPs** | Sí, despliegues rápidos, sin infraestructura. | Más complejo y con más sobrecarga para proyectos pequeños o prototipos. |
+
+> Nota: AWS tiene servicios excelentes, pero para este caso específico, la simplicidad y rapidez de Google Cloud Run lo hacen más atractivo.
 ---
 
 ## Notas
