@@ -1,0 +1,18 @@
+[run]
+omit =
+    */migrations/*
+    */admin.py
+    */apps.py
+    */tests.py
+    */__init__.py
+    manage.py
+    alfred/settings.py
+    alfred/urls.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+    def __str__
+    def __repr__
+    @abstractmethod
